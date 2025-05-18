@@ -3,54 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Blackjack</title>
+    <title>Premium Blackjack</title>
     <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #1a2a3a;
+            --accent: #f1c40f;
+            --accent-dark: #f39c12;
+            --text: #ecf0f1;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --card-width: 80px;
+            --card-height: 120px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #0a5c36;
-            color: white;
-            text-align: center;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
         }
+        
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+        
         .screen {
             display: none;
+            padding: 30px;
         }
+        
         .active {
             display: block;
         }
-        button {
-            background-color: #f8d347;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
+        
+        h1, h2, h3 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: bold;
         }
-        button:hover {
-            background-color: #e6c23e;
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background-color: #333;
+            color: var(--text);
+            font-size: 1rem;
         }
-        .card {
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .btn {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
             display: inline-block;
-            width: 60px;
-            height: 90px;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .link {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .link:hover {
+            color: var(--accent-dark);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
+        }
+        
+        /* Card styles */
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
             background-color: white;
-            color: black;
-            border-radius: 5px;
-            margin: 5px;
-            line-height: 90px;
-            font-size: 24px;
+            border-radius: 8px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            font-size: 1.5rem;
         }
-        .red {
-            color: red;
+        
+        .card.red {
+            color: #e74c3c;
         }
+        
+        .card.black {
+            color: #2c3e50;
+        }
+        
         .card-back {
             background: repeating-linear-gradient(
                 45deg,
@@ -61,31 +187,136 @@
             );
             color: white;
         }
+        
+        .card-value {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 1rem;
+        }
+        
+        .card-suit {
+            font-size: 2rem;
+        }
+        
+        /* Game area styles */
+        .game-area {
+            background-color: #0a5c36;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
         .hand {
-            min-height: 100px;
+            min-height: var(--card-height);
             margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
+        
+        .player-area, .dealer-area {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .player-area {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .dealer-area {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Chip styles */
         .chip {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background-color: #f8d347;
-            line-height: 40px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        .message {
-            font-size: 18px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
             font-weight: bold;
-            margin: 10px 0;
-            min-height: 27px;
+            color: white;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
         }
-        input {
-            padding: 8px;
-            margin: 5px;
-            border-radius: 5px;
-            border: none;
+        
+        .chip:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+        
+        .chip.low {
+            background-color: #27ae60;
+            border: 3px solid #2ecc71;
+        }
+        
+        .chip.medium {
+            background-color: #3498db;
+            border: 3px solid #2980b9;
+        }
+        
+        .chip.high {
+            background-color: #e74c3c;
+            border: 3px solid #c0392b;
+        }
+        
+        /* Message area */
+        .message {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            min-height: 30px;
+            color: var(--accent);
+        }
+        
+        /* User info */
+        .user-info {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            :root {
+                --card-width: 60px;
+                --card-height: 90px;
+            }
+            
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .controls .btn {
+                width: 100%;
+                max-width: 200px;
+            }
         }
     </style>
 </head>
@@ -93,35 +324,68 @@
     <div class="container">
         <!-- Login Screen -->
         <div id="login-screen" class="screen active">
-            <h1>Welcome to Blackjack</h1>
+            <h1>Premium Blackjack</h1>
             <div id="login-form">
-                <h2>Login</h2>
-                <input type="text" id="username" placeholder="Username"><br>
-                <input type="password" id="password" placeholder="Password"><br>
-                <button id="login-btn">Login</button>
-                <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                <h2>Welcome Back</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button id="login-btn" class="btn btn-block">Login</button>
+                <p class="text-center mt-20">Don't have an account? <a class="link" id="show-signup">Sign up</a></p>
             </div>
             <div id="signup-form" style="display:none">
-                <h2>Sign Up</h2>
-                <input type="text" id="new-username" placeholder="Username"><br>
-                <input type="password" id="new-password" placeholder="Password"><br>
-                <input type="password" id="confirm-password" placeholder="Confirm Password"><br>
-                <button id="signup-btn">Sign Up</button>
-                <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label for="new-username">Username</label>
+                    <input type="text" id="new-username" placeholder="Choose a username">
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Password</label>
+                    <input type="password" id="new-password" placeholder="Choose a password">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password">
+                </div>
+                <button id="signup-btn" class="btn btn-block">Sign Up</button>
+                <p class="text-center mt-20">Already have an account? <a class="link" id="show-login">Login</a></p>
             </div>
         </div>
 
         <!-- Menu Screen -->
         <div id="menu-screen" class="screen">
             <h1>Select Your Stakes</h1>
-            <div class="stakes">
-                <button class="stake-btn" data-stake="low">Low Stakes ($5-$100)</button><br>
-                <button class="stake-btn" data-stake="medium">Medium Stakes ($50-$500)</button><br>
-                <button class="stake-btn" data-stake="high">High Stakes ($500-$5000)</button>
-            </div>
             <div class="user-info">
-                <p>Welcome, <span id="display-username"></span> | Balance: $<span id="balance">1000</span></p>
-                <button id="logout-btn">Logout</button>
+                <div>
+                    <span id="display-username"></span> | 
+                    Balance: $<span id="balance">1000</span>
+                </div>
+                <button id="logout-btn" class="btn btn-danger">Logout</button>
+            </div>
+            
+            <div class="stakes">
+                <div class="stake-option">
+                    <h3>Low Stakes</h3>
+                    <p>$5 - $100 bets</p>
+                    <button class="btn btn-block stake-btn" data-stake="low">Play Now</button>
+                </div>
+                
+                <div class="stake-option" style="margin: 20px 0;">
+                    <h3>Medium Stakes</h3>
+                    <p>$50 - $500 bets</p>
+                    <button class="btn btn-block stake-btn" data-stake="medium">Play Now</button>
+                </div>
+                
+                <div class="stake-option">
+                    <h3>High Stakes</h3>
+                    <p>$500 - $5000 bets</p>
+                    <button class="btn btn-block stake-btn" data-stake="high">Play Now</button>
+                </div>
             </div>
         </div>
 
@@ -129,36 +393,48 @@
         <div id="game-screen" class="screen">
             <h1>Blackjack</h1>
             <div class="user-info">
-                <p><span id="game-username"></span> | Balance: $<span id="game-balance">1000</span> | Bet: $<span id="current-bet">0</span></p>
-                <button id="game-logout-btn">Leave Game</button>
+                <div>
+                    <span id="game-username"></span> | 
+                    Balance: $<span id="game-balance">1000</span> | 
+                    Bet: $<span id="current-bet">0</span>
+                </div>
+                <button id="game-logout-btn" class="btn btn-danger">Leave Table</button>
             </div>
             
             <div class="game-area">
-                <h3>Dealer</h3>
-                <div id="dealer-hand" class="hand"></div>
+                <div class="dealer-area">
+                    <h3>Dealer</h3>
+                    <div id="dealer-hand" class="hand"></div>
+                </div>
                 
-                <h3>Player</h3>
-                <div id="player-hand" class="hand"></div>
+                <div class="player-area">
+                    <h3>Player</h3>
+                    <div id="player-hand" class="hand"></div>
+                </div>
                 
                 <div class="message" id="message"></div>
                 
                 <div id="betting-controls">
                     <h3>Place Your Bet</h3>
-                    <div id="chips">
-                        <div class="chip" data-amount="5">5</div>
-                        <div class="chip" data-amount="10">10</div>
-                        <div class="chip" data-amount="25">25</div>
-                        <div class="chip" data-amount="50">50</div>
-                        <div class="chip" data-amount="100">100</div>
+                    <div id="chips" style="text-align: center; margin: 15px 0;">
+                        <div class="chip low" data-amount="5">5</div>
+                        <div class="chip low" data-amount="10">10</div>
+                        <div class="chip low" data-amount="25">25</div>
+                        <div class="chip low" data-amount="50">50</div>
+                        <div class="chip low" data-amount="100">100</div>
                     </div>
-                    <button id="clear-bet">Clear Bet</button>
-                    <button id="deal-btn">Deal</button>
+                    <div class="controls">
+                        <button id="clear-bet" class="btn">Clear Bet</button>
+                        <button id="deal-btn" class="btn btn-success">Deal</button>
+                    </div>
                 </div>
                 
                 <div id="game-controls" style="display:none">
-                    <button id="hit-btn">Hit</button>
-                    <button id="stand-btn">Stand</button>
-                    <button id="double-btn">Double</button>
+                    <div class="controls">
+                        <button id="hit-btn" class="btn">Hit</button>
+                        <button id="stand-btn" class="btn btn-danger">Stand</button>
+                        <button id="double-btn" class="btn">Double</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,8 +494,8 @@
         });
 
         showLogin.addEventListener('click', () => {
-            signupForm.style.display = 'block';
-            loginForm.style.display = 'none';
+            signupForm.style.display = 'none';
+            loginForm.style.display = 'block';
         });
 
         loginBtn.addEventListener('click', login);
@@ -339,9 +615,16 @@
                 high: [500, 1000, 2500, 5000, 10000]
             };
             
+            // Update chip values and colors
             chips.forEach((chip, index) => {
                 chip.textContent = chipValues[game.stake][index];
                 chip.dataset.amount = chipValues[game.stake][index];
+                
+                // Remove all stake classes
+                chip.classList.remove('low', 'medium', 'high');
+                
+                // Add current stake class
+                chip.classList.add(game.stake);
             });
         }
 
@@ -506,27 +789,56 @@
             
             // Dealer's hand
             game.dealerHand.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                
                 if (index === 0 && !showDealerCard && game.gameActive) {
-                    dealerHandDisplay.innerHTML += '<div class="card card-back"></div>';
+                    cardElement.classList.add('card-back');
+                    dealerHandDisplay.appendChild(cardElement);
                 } else {
-                    renderCard(card, dealerHandDisplay);
+                    if (card.suit === '♥' || card.suit === '♦') {
+                        cardElement.classList.add('red');
+                    } else {
+                        cardElement.classList.add('black');
+                    }
+                    
+                    const valueElement = document.createElement('div');
+                    valueElement.className = 'card-value';
+                    valueElement.textContent = card.value;
+                    
+                    const suitElement = document.createElement('div');
+                    suitElement.className = 'card-suit';
+                    suitElement.textContent = card.suit;
+                    
+                    cardElement.appendChild(valueElement);
+                    cardElement.appendChild(suitElement);
+                    dealerHandDisplay.appendChild(cardElement);
                 }
             });
             
             // Player's hand
             game.playerHand.forEach(card => {
-                renderCard(card, playerHandDisplay);
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                
+                if (card.suit === '♥' || card.suit === '♦') {
+                    cardElement.classList.add('red');
+                } else {
+                    cardElement.classList.add('black');
+                }
+                
+                const valueElement = document.createElement('div');
+                valueElement.className = 'card-value';
+                valueElement.textContent = card.value;
+                
+                const suitElement = document.createElement('div');
+                suitElement.className = 'card-suit';
+                suitElement.textContent = card.suit;
+                
+                cardElement.appendChild(valueElement);
+                cardElement.appendChild(suitElement);
+                playerHandDisplay.appendChild(cardElement);
             });
-        }
-
-        function renderCard(card, container) {
-            const cardElement = document.createElement('div');
-            cardElement.className = 'card';
-            if (card.suit === '♥' || card.suit === '♦') {
-                cardElement.classList.add('red');
-            }
-            cardElement.textContent = card.value + card.suit;
-            container.appendChild(cardElement);
         }
 
         function endGame(result) {
